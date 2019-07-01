@@ -14,7 +14,8 @@ https.get('https://rest.soilgrids.org/query?lon='+lon+'&lat='+lat+'&attributes=P
 
   resp.on('end', () => {
     var json = JSON.parse(data);
-    console.log(json["properties"].PHIKCL.M.sl1);
+    //console.log(json["properties"].PHIKCL.M.sl1);
+    console.log(json);
   });
 
 }).on("error", (err) => {
