@@ -1,14 +1,18 @@
+function connectToDatabase(){
 var mysql = require('mysql');
 
-//conection properties
+
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root"
+  host: "37.59.55.185",
+  user: "sxQCd7ISon",
+  password: "ZTTqpyPVNA"
 });
 
-//conect to DataBase
+
 con.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
       
   });
+}
+connectToDatabase();
