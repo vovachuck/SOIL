@@ -35,21 +35,18 @@ if (xhr2.status != 200) {
   });
   var ph1=sum/16;
   ph1= ph1.toFixed(1);
+  var temp=ph1;
   alert( ph1 ); 
 }
 
-var crop1 = $('#crop-1').value;
-var crop2 = $('#crop-2').value;
-var crop3 = $('#crop-3').value;
-var crop4 = $('#crop-4').value;
-var crop5 = $('#crop-5').value;
-var usedCropArray = [{crop1,crop2,crop3,crop4,crop5}];
-//alert(usedCropArray.toString);*/
+var family1=$('#dropDownList1').val();
+var family2=$('#dropDownList2').val();
+var family3=$('#dropDownList3').val();
 
 
 var xhr1 = new XMLHttpRequest();
 
-xhr1.open('GET', 'http://127.0.0.1:8080/123/?ph='+ph+"&"+temp, false);
+xhr1.open('GET', 'http://127.0.0.1:8080/123/?ph='+ph+"&temp="+temp+"&family1="+family1+"&family2="+family2+"&family3="+family3, false);
 
 
 xhr1.send();
@@ -64,6 +61,7 @@ if (xhr1.status != 200) {
 
 
 }
+
 function getCrops(){
   var xhr3 = new XMLHttpRequest();
 
@@ -76,7 +74,53 @@ if (xhr3.status != 200) {
  
   alert( xhr3.status + ': ' + xhr3.statusText ); 
 } else {
+  var json2 = JSON.parse(xhr3.responseText);
   
-  alert( xhr3.responseText ); 
+  for(element of json2 ){
+    $('.dropDownList').append(
+      $('<option ></option>').val(element.family).html(element.name)
+  );
+  }
 }
+}
+function getFertilizers(){
+
+  var xhr = new XMLHttpRequest();
+
+xhr.open('GET', 'https://rest.soilgrids.org/query?lon='+window.longitude+'&lat='+window.latitude+'&attributes=PHIKCL', false);
+
+xhr.send();
+
+if (xhr.status != 200) {
+ 
+  alert( xhr.status + ': ' + xhr.statusText ); 
+} else {
+  var json = JSON.parse(xhr.responseText);
+  var ph=(json["properties"].PHIKCL.M.sl1 + json["properties"].PHIKCL.M.sl2 + json["properties"].PHIKCL.M.sl3)/30;
+  ph= ph.toFixed(1);
+   
+}
+
+var name = $('#dropDownFat1  :selected').html();
+
+
+var xhr4 = new XMLHttpRequest();
+
+xhr4.open('GET', 'http://127.0.0.1:8080/31/?name='+name+'&ph='+ph, false);
+
+
+xhr4.send();
+console.log(ph)
+if (xhr4.status != 200) {
+ 
+  alert( xhr4.status + ': ' + xhr4.statusText ); 
+} else {
+  if(xhr4.responseText.indexOf("ok")+1){
+      alert("ok")
+  }else {
+  var json1 = JSON.parse(xhr4.responseText);
+  alert(json1);
+  }
+  }
+
 }

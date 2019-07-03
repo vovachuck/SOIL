@@ -28,7 +28,7 @@ app.get('/123', function (req, res) {
     con.connect(function(err) {
         if (err) throw err;
         
-        con.query("SELECT * FROM Crops where bestPH="+req.query.ph+"and where bestTemperature="+req.query.temp, function (err, result, fields) {
+        con.query("SELECT * FROM Crops where "+req.query.ph+" between bestPHMin and bestPHMax"+" and "+req.query.temp+" between bestTemperatureMin and bestTemperatureMax and  not (family= '"+req.query.family1+ "' or family= '"+req.query.family2+"' or family= '"+ req.query.family3+"')", function (err, result, fields) {
           if (err) throw err;
           /*Object.keys(result).forEach(function(key) {
             var row = result[key];
@@ -42,9 +42,7 @@ app.get('/123', function (req, res) {
     
     
   });
-  /*app.get('/25', function(req, res){
-    res.send('id: ' + req.query.id);
-  });*/
+  
   app.get('/25', function(req, res){
     var mysql = require('mysql');
     
@@ -60,16 +58,54 @@ app.get('/123', function (req, res) {
     con.connect(function(err) {
         if (err) throw err;
         
-        con.query("SELECT name FROM Crops", function (err, result, fields) {
+        con.query("SELECT name,family FROM Crops", function (err, result, fields) {
           if (err) throw err;
-          /*Object.keys(result).forEach(function(key) {
-            var row = result[key];
-            data=row.name;
-            console.log(row.name)
-          });*/
+          
           res.send(result);
         });
           
+      });
+  });
+
+  app.get('/31', function(req, res){
+    var mysql = require('mysql');
+    var phMin;
+    var phMax;
+    
+    var con = mysql.createConnection({
+      host: "37.59.55.185",
+      user: "sxQCd7ISon",
+      password: "ZTTqpyPVNA",
+      database: "sxQCd7ISon"
+    });
+    
+    
+    con.connect(function(err) {
+        if (err) throw err;
+        con.query("SELECT 	bestPHMin,bestPHMax FROM Crops where name= '"+req.query.name+"'", function (err, result, fields) {
+          if (err) throw err;
+          
+          phMin=result.bestPHMin
+          phMax=result.bestPHMax
+        });
+        if(phMax<req.query.ph){
+        con.query("SELECT * FROM Fertilizers where pHinfluence=0", function (err, result, fields) {
+          if (err) throw err;
+          
+          res.send(result);
+        });
+      }else
+            if(req.query.ph<phMin){
+        con.query("SELECT * FROM Fertilizers where pHinfluence=1", function (err, result, fields) {
+          if (err) throw err;
+          
+          res.send(result);
+        });
+            }
+            else {
+              // When crop can be planted
+              res.send("ok");
+            }
       });
   });
 app.listen(8080);
