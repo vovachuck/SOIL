@@ -54,7 +54,7 @@ function getSoils() {
 
 	xhr1.open(
 		'GET',
-		'http://127.0.0.1:8080/123/?ph=' +
+		'https://soil-245714.appspot.com/123/?ph=' +
 			ph +
 			'&temp=' +
 			temp +
@@ -96,7 +96,7 @@ function getSoils() {
 function getCrops() {
 	var xhr3 = new XMLHttpRequest();
 
-	xhr3.open('GET', 'http://127.0.0.1:8080/25', false);
+	xhr3.open('GET', 'http://soil-245714.appspot.com/25', false);
 
 	xhr3.send();
 
@@ -136,7 +136,7 @@ function getFertilizers() {
 
 	var xhr4 = new XMLHttpRequest();
 
-	xhr4.open('GET', 'http://127.0.0.1:8080/31/?name=' + name + '&ph=' + ph, false);
+	xhr4.open('GET', 'http://soil-245714.appspot.com/31/?name=' + name + '&ph=' + ph, false);
 	xhr4.send();
 	if (xhr4.status != 200) {
 		console.log(xhr4.status + ': ' + xhr4.statusText);
